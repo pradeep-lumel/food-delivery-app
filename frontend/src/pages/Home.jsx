@@ -1,5 +1,8 @@
 import { Box, Container, styled, Button, Typography, Stack } from '@mui/material';
 import React from 'react';
+import ExploreMenu from '../components/ExploreMenu';
+import { CustomDivider } from '../utils/Typo';
+import { DisplayFood } from '../components/DisplayFood';
 
 const OverlayContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -91,7 +94,11 @@ export const Home = () => {
         <OverlayButton>View more</OverlayButton>
       </OverlayContainer>
     </Container>
-    {/* todo */}
+    <CustomDivider/>
+    <ExploreMenu/>
+    <CustomDivider/>
+    <DisplayFood/>
+    <CustomDivider/>
     </Stack>
   );
 };
