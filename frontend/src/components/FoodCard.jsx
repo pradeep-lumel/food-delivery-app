@@ -19,11 +19,11 @@ const FoodCard = ({ id, name, image, price, description, category }) => {
     <Card 
       sx={{ 
         width: {
-          xs: 150,  
+          xs: 200,  
           sm: 200,  
         }, 
         height: {
-          xs: 160,  
+          xs: 150,  
           sm: 260,  
         },
         padding: '2px', 

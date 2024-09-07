@@ -1,8 +1,9 @@
 import { Box, Button, Card, CardActions, CardContent, CardMedia, Container ,Typography} from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useDispatch, useSelector } from 'react-redux'
 import { CustomDivider, HeadingTypo, SubtitleTypo } from '../utils/Typo'; 
 import Rating from '@mui/material/Rating';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FoodCard from './FoodCard';
 import { food_list } from '../../public/Food_images/assets/assets';
 
@@ -17,12 +18,20 @@ const FoodDisplayBox = styled(Box)(({ theme }) => ({
 }));
 
 export const DisplayFood = () => {
- 
+ const activeFood=useSelector(state=>state.foodDisplay.activeFoodCategory)
+ const [specificCategoryList, setSpecificCategoryList] = useState([])
+ useEffect(()=>{
+    const filteredList=food_list.filter((item)=>{
+    return item.category==activeFood
+  })
+  if(filteredList.length==0)setSpecificCategoryList(food_list)
+  else setSpecificCategoryList(filteredList)
+ },[activeFood])
   return (
     <Container>
-      <HeadingTypo>Top Dishes Near You</HeadingTypo>
+      <HeadingTypo>Top Dishes Near You {activeFood!=='' && '-'} {activeFood}</HeadingTypo>
       <FoodDisplayBox>
-        {food_list && food_list.map((item)=>(
+        {specificCategoryList && specificCategoryList.map((item)=>(
             <FoodCard  {...item}/>
         ))}
       </FoodDisplayBox>

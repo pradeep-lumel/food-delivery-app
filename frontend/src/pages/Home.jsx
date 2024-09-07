@@ -3,6 +3,7 @@ import React from 'react';
 import ExploreMenu from '../components/ExploreMenu';
 import { CustomDivider } from '../utils/Typo';
 import { DisplayFood } from '../components/DisplayFood';
+import Carousel from '../components/Carousel';
 
 const OverlayContainer = styled(Box)(({ theme }) => ({
   position: 'absolute',
@@ -71,7 +72,7 @@ export const Home = () => {
   return (
     <Stack>
     <Container sx={{ position: 'relative', padding: '0' }}>
-      <Box
+      <Box id='Home'
         component="img"
         src="/Food_images/assets/header_img.png"
         alt="title_img"
@@ -99,6 +100,7 @@ export const Home = () => {
     <CustomDivider/>
     <DisplayFood/>
     <CustomDivider/>
+    <Carousel/>
     </Stack>
   );
 };

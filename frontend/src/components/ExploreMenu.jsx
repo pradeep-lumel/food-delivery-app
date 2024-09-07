@@ -6,11 +6,10 @@ import { menu_list } from '../../public/Food_images/assets/assets'
 import { setActiveFoodCategory } from '../slicers/FoodDisplaySlice'
 
 const ExploreMenu = () => {
-    const activeId=useSelector(state=>state.foodDisplay.activeFoodCategory)
-    console.log(activeId)
+    const activeFood=useSelector(state=>state.foodDisplay.activeFoodCategory)
     const dispatch=useDispatch()
   return (
-    <Container>
+    <Container id="Menu" >
         <HeadingTypo>Explore Our Menu </HeadingTypo>
         <SubtitleTypo sx={{marginTop:'10px'}}>Lorem ipsum, dolor sit amet consectetur adipisicing elit. <br />  Vitae ratione suscipit accusamus dolore laborum quam fugit quo magni iure minus!</SubtitleTypo>
         <Box 
@@ -42,15 +41,18 @@ const ExploreMenu = () => {
               src={`${item.menu_image}`} 
               alt={item.menu_name} 
               style={{ 
-                width: '100px',
+                width:  '100px',
                 margin: '15px 20px',
                 height: 'auto',
                 borderRadius: '50%',
-                boxShadow:activeId===item.menu_name?'1px 2px 20px green ':'',
+                boxShadow:activeFood===item.menu_name?'1px 2px 20px green ':'',
                 padding:'2px', 
+                cursor:'pointer',
                 transition: 'border 0.3s ease', 
               }} 
-              onClick={()=>dispatch(setActiveFoodCategory(item.menu_name))}
+              onClick={()=>{
+                if(activeFood==item.menu_name)dispatch(setActiveFoodCategory(''))
+                else dispatch(setActiveFoodCategory(item.menu_name))}}
             />
             <SubtitleTypo sx={{marginTop:'15px'}}>{item.menu_name}</SubtitleTypo>
            </Box>
