@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const foodDisplaySlice=createSlice({
     name:'foods',
     initialState:{
-        activeFoodCategory:'Salad',
+        activeFoodCategory:'',
     },
     reducers:{
         setActiveFoodCategory:(state,action)=>{
