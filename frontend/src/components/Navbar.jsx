@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Container, Typography, IconButton, styled } from '@mui/material';
+import { Box, Container, Typography, IconButton, styled, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -42,7 +42,9 @@ const IconContainer = styled(Box)(({ theme }) => ({
 
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState('Home');
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleOpen = () => setModalOpen(true);
+  const handleClose = () => setModalOpen(false);
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -105,15 +107,22 @@ const Navbar = () => {
       </MenuContainer>
 
       <IconContainer>
-        <IconButton color="inherit">
+        <IconButton sx={{display:{xs:'none',md:'flex'}}} color="inherit">
           <SearchIcon />
         </IconButton>
-        <IconButton color="inherit">
+        <IconButton sx={{display:{xs:'none',md:'flex'}}} color="inherit">
           <ShoppingCartIcon />
         </IconButton>
-        <IconButton color="inherit">
-          <AccountCircleIcon />
-        </IconButton>
+        <Button
+        sx={{
+          bgcolor: 'orange', 
+          fontSize: '0.75rem',
+          padding: '6px 12px', 
+          fontFamily: 'Montserrat, sans-serif', 
+        }}
+        size="small"  
+        onClick={()=>{}}
+        variant='contained'>Login/Signup</Button>
       </IconContainer>
     </Container>
   );
