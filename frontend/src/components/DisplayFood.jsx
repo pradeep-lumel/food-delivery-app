@@ -31,8 +31,8 @@ export const DisplayFood = () => {
     <Container>
       <HeadingTypo>Top Dishes Near You {activeFood!=='' && '-'} {activeFood}</HeadingTypo>
       <FoodDisplayBox>
-        {specificCategoryList && specificCategoryList.map((item)=>(
-            <FoodCard  {...item}/>
+        {specificCategoryList && specificCategoryList.map((item,_id)=>(
+            <FoodCard  key={_id} {...item}/>
         ))}
       </FoodDisplayBox>
     </Container>

@@ -17,7 +17,7 @@ const SignUpModal = () => {
 
   const handleClose = () => {
     setOpen(false);
-    navigate('/'); // Redirect to home or any other page after closing
+    navigate('/');
   };
 
   const [formData, setFormData] = useState({
@@ -35,13 +35,12 @@ const SignUpModal = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Perform sign-up logic here
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
     console.log('Sign Up Form Data:', formData);
-    handleClose(); // Close the modal after submission
+    handleClose();
   };
 
   return (
@@ -52,18 +51,21 @@ const SignUpModal = () => {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 400,
+          width: { xs: '90%', sm: 400 },
           bgcolor: 'background.paper',
           borderRadius: 1,
           boxShadow: 24,
           p: 4,
         }}
       >
-        <Typography variant="h5" component="h2" gutterBottom>
+        <Typography 
+          variant="h5" 
+          component="h2" 
+          gutterBottom 
+          sx={{ fontSize: { xs: '1.5rem', sm: '2rem' } }}
+        >
           Sign Up
         </Typography>
-
-        {/* Sign-up form inside the modal */}
         <form onSubmit={handleSubmit}>
           <TextField
             label="Email"
@@ -74,6 +76,7 @@ const SignUpModal = () => {
             value={formData.email}
             onChange={handleChange}
             required
+            InputProps={{ sx: { fontSize: { xs: '0.875rem', sm: '1rem' } } }}
           />
           <TextField
             label="Password"
@@ -84,6 +87,7 @@ const SignUpModal = () => {
             value={formData.password}
             onChange={handleChange}
             required
+            InputProps={{ sx: { fontSize: { xs: '0.875rem', sm: '1rem' } } }}
           />
           <TextField
             label="Confirm Password"
@@ -94,8 +98,15 @@ const SignUpModal = () => {
             value={formData.confirmPassword}
             onChange={handleChange}
             required
+            InputProps={{ sx: { fontSize: { xs: '0.875rem', sm: '1rem' } } }}
           />
-          <Button type="submit" variant="contained" color="secondary" fullWidth>
+          <Button 
+            type="submit" 
+            variant="contained" 
+            color="primary" 
+            fullWidth 
+            sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}
+          >
             Sign Up
           </Button>
         </form>
