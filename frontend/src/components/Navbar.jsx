@@ -3,8 +3,8 @@ import { Box, Container, Typography, IconButton, styled, Button } from '@mui/mat
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Link } from 'react-scroll';
-
+import { Link as ScrollLink } from 'react-scroll';
+import { useNavigate,Link } from 'react-router-dom';
 const MenuContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   listStyle: 'none',
@@ -48,7 +48,7 @@ const Navbar = () => {
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
-
+  const navigate=useNavigate()
   return (
     <Container sx={{
       display: 'flex',
@@ -88,12 +88,11 @@ const Navbar = () => {
             onClick={() => {
               handleTabClick(tab);
               if (tab !== 'Home') {
-                // Ensure you have an element with the id corresponding to the tab
                 document.getElementById(tab)?.scrollIntoView({ behavior: 'smooth' });
               }
             }}
           >
-            <Link 
+            <ScrollLink 
               to={tab}
               spy={true} 
               smooth={true} 
@@ -101,7 +100,7 @@ const Navbar = () => {
               offset={-70}
             >
               {tab}
-            </Link>
+            </ScrollLink>
           </li>
         ))}
       </MenuContainer>
@@ -114,15 +113,38 @@ const Navbar = () => {
           <ShoppingCartIcon />
         </IconButton>
         <Button
-        sx={{
-          bgcolor: 'orange', 
-          fontSize: '0.75rem',
-          padding: '6px 12px', 
-          fontFamily: 'Montserrat, sans-serif', 
+      sx={{
+        bgcolor: 'orange',
+        fontSize: '0.75rem',
+        padding: '6px 12px',
+        fontFamily: 'Montserrat, sans-serif',
+        display: 'flex',
+        justifyContent: 'space-between',
+        gap: '4px', 
+      }}
+      size="small"
+      variant="contained"
+    >
+      <Link
+        to="/login"
+        style={{
+          textDecoration: 'none',
+          color: 'inherit',
         }}
-        size="small"  
-        onClick={()=>{}}
-        variant='contained'>Login/Signup</Button>
+      >
+        Login
+      </Link>
+      /
+      <Link
+        to="/signup"
+        style={{
+          textDecoration: 'none',
+          color: 'inherit',
+        }}
+      >
+        Signup
+      </Link>
+    </Button>
       </IconContainer>
     </Container>
   );

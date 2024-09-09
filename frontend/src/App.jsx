@@ -7,6 +7,7 @@ import { Home } from './components/Home';
 import Footer from './components/Footer';
 import LoginModal from './components/LogIn';
 import SignUpModal from './components/SignUp';
+import Cart from './components/Cart';
 
 function App() {
   return (
@@ -14,13 +15,14 @@ function App() {
     <Container>
       <Box sx={{padding:{sm:'1% 2%',md:'1% 6%'}}}>
       <Navbar />
-      <Home/>
       <Routes>
+      <Route path="/" element={<Home/>} />
       <Route path="/signup" element={<SignUpModal/>} />
       <Route path="/login" element={<LoginModal/>} />
+      <Route path="/cart" element={<Cart/>} />
       </Routes>
-      </Box>
       <Footer/>
+      </Box>
     </Container>
     </Router>
   );
