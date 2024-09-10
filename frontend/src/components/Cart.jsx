@@ -4,7 +4,8 @@ import {
   TableHead, TableRow, Paper, IconButton, 
   Stack,
   Container,
-  Box
+  Box,
+  Button
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import TextField from '@mui/material/TextField';
@@ -24,7 +25,6 @@ const Cart = () => {
   const cartItems = [
     { id: 1, title: 'Item 1', price: 10, quantity: 1 },
     { id: 2, title: 'Item 2', price: 20, quantity: 2 },
-    { id: 3, title: 'Item 3', price: 15, quantity: 3 },
   ];
 
   const handleRemove = (id) => {
@@ -69,17 +69,23 @@ const Cart = () => {
         spacing={2} 
         direction={{ xs: 'column', md: 'row' }} 
         justifyContent="space-between" 
-        sx={{ marginTop: '2%', marginBottom: '5%', alignItems: { xs: 'flex-start', md: 'center' } }}
+        sx={{ marginTop: '2%', marginBottom: '3%', alignItems: { xs: 'flex-start', md: 'center' } }}
       >
         <TableContainer sx={{ width: { xs: '100%', md: '45%' }, marginBottom: { xs: '2%', md: 0 } }} component={Paper}>
           <Table>
             <TableBody>
-              {cartItems.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell sx={{ padding: '8px' }}>{item.id}</TableCell>
+                <TableRow>
+                  <TableCell sx={{ padding: '8px' }}>Sub total</TableCell>
                   <TableCell sx={{ padding: '8px', textAlign: 'right' }}>$54</TableCell>
                 </TableRow>
-              ))}
+                <TableRow>
+                <TableCell sx={{ padding: '8px'}}>Delivery Fee</TableCell>
+                <TableCell sx={{ padding: '8px', textAlign: 'right' }}>$5</TableCell>
+                </TableRow>
+                <TableRow>
+                <TableCell sx={{ padding: '8px',fontWeight:'800'}}>Total</TableCell>
+                <TableCell sx={{ padding: '8px', textAlign: 'right' }}>$108</TableCell>
+                </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
@@ -104,6 +110,7 @@ const Cart = () => {
           }}
         />
       </Stack>
+      <Button sx={{bgcolor:'darkOrange',color:'white'}}>PROCEED TO CHECKOUT</Button>
     </Container>
   );
 };
