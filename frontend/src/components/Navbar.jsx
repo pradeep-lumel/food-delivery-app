@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link as ScrollLink } from 'react-scroll';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate,Link,useLocation } from 'react-router-dom';
 const MenuContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   listStyle: 'none',
@@ -42,9 +42,8 @@ const IconContainer = styled(Box)(({ theme }) => ({
 
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState('Home');
-  const [modalOpen, setModalOpen] = useState(false);
-  const handleOpen = () => setModalOpen(true);
-  const handleClose = () => setModalOpen(false);
+  const location = useLocation();
+  const isHome = location.pathname === '/' ;
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
@@ -77,11 +76,14 @@ const Navbar = () => {
           lineHeight: '1.2',
         }}
       >
+        <div onClick={()=>navigate('/')}>
         <HeaderSpan>Q</HeaderSpan>uick<HeaderSpan>B</HeaderSpan>ite
+        </div>
       </Typography>
 
       <MenuContainer component="ul">
-        {['Home', 'Menu', 'Testimonials', 'About Us'].map((tab) => (
+        <li onClick={()=>navigate('/')}>Home</li>
+        {['Menu', 'Testimonials', 'About Us'].map((tab) => (
           <li
             key={tab}
             className={activeTab === tab ? 'active' : ''}
@@ -91,6 +93,7 @@ const Navbar = () => {
                 document.getElementById(tab)?.scrollIntoView({ behavior: 'smooth' });
               }
             }}
+            style={{ pointerEvents: !isHome && tab !== 'Home' ? 'none' : 'auto', color: !isHome && tab !== 'Home' ? 'gray' : 'inherit' }}
           >
             <ScrollLink 
               to={tab}
@@ -109,8 +112,8 @@ const Navbar = () => {
         <IconButton sx={{display:{xs:'none',md:'flex'}}} color="inherit">
           <SearchIcon />
         </IconButton>
-        <IconButton sx={{display:{xs:'none',md:'flex'}}} color="inherit">
-          <ShoppingCartIcon />
+        <IconButton onClick={()=>navigate('/cart')} sx={{display:{xs:'none',md:'flex'}}} color="inherit">
+          <ShoppingCartIcon/>
         </IconButton>
         <Button
       sx={{

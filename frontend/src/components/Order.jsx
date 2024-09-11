@@ -121,8 +121,8 @@
                 </TableBody>
             </Table>
             </TableContainer>
-            <Button sx={{bgcolor:'darkOrange',color:'white',marginTop:'5%'}}>PROCEED TO CHECKOUT</Button>
-        </Box>
+            <Button onClick={()=>navigate('/order')} sx={{bgcolor:'darkOrange',marginTop:'3%',color:'white',fontSize:'12px',color:'black',fontFamily:'Montserrat',fontWeight:'500'}}>PROCEED TO PAYMENT</Button>
+            </Box>
         </Stack>
     );
     }

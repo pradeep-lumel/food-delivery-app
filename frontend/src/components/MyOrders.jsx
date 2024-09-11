@@ -4,7 +4,6 @@ import { HeadingTypo } from '../utils/Typo'
 import WidgetsIcon from '@mui/icons-material/Widgets';
 
 const MyOrders = () => {
-  // Dummy data for orders
   const orders = [
     { id: 1, date: '2024-09-10', total: '$54', status: 'Delivered' },
     { id: 2, date: '2024-09-08', total: '$108', status: 'Pending' },
