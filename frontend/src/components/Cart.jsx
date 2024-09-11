@@ -14,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import SendIcon from '@mui/icons-material/Send';
 import { HeadingTypo } from '../utils/Typo';
+import { useNavigate } from 'react-router-dom';
 
 const PromoCodeLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -26,7 +27,7 @@ const Cart = () => {
     { id: 1, title: 'Item 1', price: 10, quantity: 1 },
     { id: 2, title: 'Item 2', price: 20, quantity: 2 },
   ];
-
+  const navigate=useNavigate()
   const handleRemove = (id) => {
     console.log('Remove item with id:', id);
   };
@@ -110,7 +111,7 @@ const Cart = () => {
           }}
         />
       </Stack>
-      <Button sx={{bgcolor:'darkOrange',color:'white'}}>PROCEED TO CHECKOUT</Button>
+      <Button onClick={()=>navigate('/order')} sx={{bgcolor:'darkOrange',color:'white',fontSize:'10px',color:'black',fontFamily:'Montserrat',fontWeight:'500'}}>PROCEED TO CHECKOUT</Button>
     </Container>
   );
 };

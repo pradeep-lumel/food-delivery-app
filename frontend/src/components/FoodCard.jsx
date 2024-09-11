@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardMedia, CardContent, Box, IconButton } from '@mui/material';
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/material/styles';
@@ -6,6 +6,8 @@ import { Typography } from '@mui/material';
 import { HeadingTypo, SubtitleTypo } from '../utils/Typo';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFoodOrderedCount } from '../slicers/FoodDisplaySlice';
 
 const GoldTypography = styled(Typography)(({ theme }) => ({
   fontSize: {
@@ -17,21 +19,18 @@ const GoldTypography = styled(Typography)(({ theme }) => ({
 }));
 
 const FoodCard = ({ name, image, price, description }) => {
-  const [addButtonClicked, setAddButtonClicked] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-
-  const handleAddClick = () => {
-    setAddButtonClicked(!addButtonClicked);
-  };
+  const quantity=useSelector(state=>state.foodDisplay.foodOrderedCount[name]??0);
+  const dispatch=useDispatch();
 
   const handleIncrease = () => {
-    setQuantity(prev => prev + 1);
+    dispatch(setFoodOrderedCount({foodName:name,count:1}))
   };
 
   const handleDecrease = () => {
-    if (quantity > 0) setQuantity(prev => prev - 1);
+    if (quantity > 0) dispatch(setFoodOrderedCount({foodName:name,count:-1}))
+      if(quantity==1)setAddButtonClicked(!addButtonClicked);
   };
-
+  useEffect(()=>{},[quantity])
   return (
     <Card 
       sx={{ 
@@ -61,7 +60,7 @@ const FoodCard = ({ name, image, price, description }) => {
           transition: 'all 0.3s ease-in-out',
         }}
       >
-        {addButtonClicked ? (
+        {quantity!=0 ? (
           <Box
             sx={{
               display: 'flex',
@@ -122,7 +121,7 @@ const FoodCard = ({ name, image, price, description }) => {
           </Box>
         ) : (
           <IconButton
-            onClick={handleAddClick}
+            onClick={handleIncrease}
             sx={{
               height: { xs: '30px' },
               width: { xs: '30px' },
