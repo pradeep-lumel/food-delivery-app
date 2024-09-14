@@ -24,7 +24,7 @@ exports.registerUser = async (req, res) => {
     }
 };
 
-
+//get user detail route
 exports.getUser = async (req, res) => {
     try {
         const userId = req.params.id;
