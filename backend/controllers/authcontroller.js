@@ -67,7 +67,7 @@ exports.getAllUsers = async (req, res) => {
         });
     }
 };
-
+//login user route
 exports.loginUser=async(req,res)=>{
   try {
     const{email,password}=req.body
