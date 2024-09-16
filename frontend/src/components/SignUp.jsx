@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Button, Typography, TextField } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axiosInstance from '../utils/axiosInstance';
 
 const SignUpModal = () => {
   const [open, setOpen] = useState(false);
@@ -33,13 +34,13 @@ const SignUpModal = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
-    console.log('Sign Up Form Data:', formData);
+    //todo the axios
     handleClose();
   };
 
