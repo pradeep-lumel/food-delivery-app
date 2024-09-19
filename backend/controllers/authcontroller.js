@@ -46,7 +46,7 @@ exports.getUser = async (req, res) => {
         });
     }
 };
-
+//get all user route
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await userModel.find();  
