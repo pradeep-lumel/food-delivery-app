@@ -5,13 +5,23 @@ const userModel = require('../models/userModel');
 //user register route
 exports.registerUser = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10); 
+        const { name,confirmPassword, email, password } = req.body;
+        if (password !== confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'Passwords do not match',
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
         const user = await userModel.create({
             name,
             email,
             password: hashedPassword,
+            confirmPassword,
         });
+        user.confirmPassword = undefined;
+
         res.json({
             success: true,
             user,
@@ -23,6 +33,7 @@ exports.registerUser = async (req, res) => {
         });
     }
 };
+
 
 //get user detail route
 exports.getUser = async (req, res) => {
