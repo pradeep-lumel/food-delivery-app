@@ -7,18 +7,25 @@ const SignUpModal = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/v1/all-users');
-        console.log(response.data);
+        const response = await axiosInstance.get('http://localhost:5000/api/v1/all-users');
       } catch (error) {
         console.error('Error fetching users:', error);
       }
     };
     fetchUsers();
   }, []);
+
   useEffect(() => {
     if (location.pathname === '/signup') {
       setOpen(true);
@@ -32,12 +39,6 @@ const SignUpModal = () => {
     navigate('/');
   };
 
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -45,13 +46,13 @@ const SignUpModal = () => {
     });
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       alert('Passwords do not match!');
       return;
     }
-    //todo the axios
+    // TODO: Implement the Axios POST request for sign-up
     handleClose();
   };
 
@@ -79,6 +80,16 @@ const SignUpModal = () => {
           Sign Up
         </Typography>
         <form onSubmit={handleSubmit}>
+          <TextField
+            label="Name"
+            name="name"
+            fullWidth
+            margin="normal"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            InputProps={{ sx: { fontSize: { xs: '0.875rem', sm: '1rem' } } }}
+          />
           <TextField
             label="Email"
             name="email"

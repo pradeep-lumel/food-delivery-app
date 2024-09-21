@@ -18,10 +18,21 @@ const userSchema = new mongoose.Schema({
         required: true,
         minlength: 6,
     },
+    confirmPassword: {
+        type: String,
+        required: true,
+        minlength: 6,
+    },
     createdAt: {
         type: Date,
         default: Date.now,
     },
+});
+
+
+userSchema.pre('save', function(next) {
+    this.confirmPassword = undefined;
+    next();
 });
 
 const userModel = mongoose.model('User', userSchema);
