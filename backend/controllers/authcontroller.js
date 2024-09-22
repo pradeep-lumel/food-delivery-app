@@ -104,7 +104,7 @@ exports.loginUser=async(req,res)=>{
      })
   }
 }
-
+//router for update user
 exports.updateUser = async (req, res) => {
     try {
         const userId = req.params.id;
