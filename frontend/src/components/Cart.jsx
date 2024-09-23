@@ -64,7 +64,7 @@ const Cart = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      
+
       <HeadingTypo sx={{marginTop:'3%'}}>Cart Totals</HeadingTypo>
       <Stack 
         spacing={2} 
@@ -90,6 +90,7 @@ const Cart = () => {
             </TableBody>
           </Table>
         </TableContainer>
+        
         <TextField
           sx={{ width: { xs: '100%', md: '40%' } }}
           label="If you have a promo code enter it here"
