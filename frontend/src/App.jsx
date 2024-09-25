@@ -10,6 +10,9 @@ import SignUpModal from './components/SignUp';
 import Cart from './components/Cart';
 import Order from './components/Order';
 import MyOrders from './components/MyOrders';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   return (
@@ -28,6 +31,7 @@ function App() {
       <Footer/>
       </Box>
     </Container>
+    <ToastContainer/>
     </Router>
   );
 }
