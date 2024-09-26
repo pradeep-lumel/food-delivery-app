@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, Button, Typography, TextField } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import {useDispatch,useSelector} from 'react-redux'
+import { login } from '../slicers/authSlice';
+import axiosInstance from '../utils/axiosInstance';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const LoginModal = () => {
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-
+  const dispatch=useDispatch()
   useEffect(() => {
     if (location.pathname === '/login') {
       setOpen(true);
@@ -20,10 +24,18 @@ const LoginModal = () => {
     navigate('/');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log('Login Form Data:', formData);
-    handleClose();
+    try {
+      const response = await axiosInstance.post('/login', formData);
+      const { token, user } = response.data;
+      // console.log(token,user) 
+      dispatch(login({ user, token }));
+      localStorage.setItem('token', token);
+      handleClose(); 
+    } catch (error) {
+      toast.error('Login failed:', error.response?.data?.message || error.message);
+    }
   };
 
   const [formData, setFormData] = useState({

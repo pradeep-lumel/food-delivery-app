@@ -5,6 +5,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link as ScrollLink } from 'react-scroll';
 import { useNavigate,Link,useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 const MenuContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   listStyle: 'none',
@@ -44,6 +45,8 @@ const Navbar = () => {
   const [activeTab, setActiveTab] = useState('Home');
   const location = useLocation();
   const isHome = location.pathname === '/' ;
+  const { isAuth, user } = useSelector((state) => state.authentication);
+  console.log(isAuth,user)
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
