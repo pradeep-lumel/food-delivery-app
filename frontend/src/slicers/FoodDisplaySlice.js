@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+//slicers for food details
 export const foodDisplaySlice=createSlice({
     name:'foods',
     initialState:{
