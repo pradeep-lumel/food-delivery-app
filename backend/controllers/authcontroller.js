@@ -92,7 +92,7 @@ exports.loginUser=async(req,res)=>{
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: '100d',
     });
-    res.json({
+    return res.json({
         success: true,
         token,
         user,
@@ -169,3 +169,14 @@ exports.deleteAllUser = async (req, res) => {
     }
 };
 
+exports.getUserProfile=async(req,res)=>{
+    try {
+        const user = await userModel.findById(req.user.id).select('-password');
+        if (!user) {
+          return res.status(404).json({ success: false, message: 'User not found' });
+        }
+        res.json({ success: true, user });
+      } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+      }
+}
