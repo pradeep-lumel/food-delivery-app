@@ -18,7 +18,6 @@ const LoginModal = () => {
       setOpen(false);
     }
   }, [location.pathname]);
-
   const handleClose = () => {
     setOpen(false);
     navigate('/');
@@ -28,8 +27,8 @@ const LoginModal = () => {
     e.preventDefault();
     try {
       const response = await axiosInstance.post('/login', formData);
+      console.log(response)
       const { token, user } = response.data;
-      // console.log(token,user) 
       dispatch(login({ user, token }));
       localStorage.setItem('token', token);
       handleClose(); 

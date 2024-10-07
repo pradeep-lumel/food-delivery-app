@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Box, Container, Typography, IconButton, styled, Button } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Box, Container, Typography, IconButton, styled, Button, Avatar } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link as ScrollLink } from 'react-scroll';
-import { useNavigate,Link,useLocation } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 const MenuContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -44,25 +44,26 @@ const IconContainer = styled(Box)(({ theme }) => ({
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState('Home');
   const location = useLocation();
-  const isHome = location.pathname === '/' ;
-  const { isAuth, user } = useSelector((state) => state.authentication);
-  console.log(isAuth,user)
+  const isHome = location.pathname === '/';
+  const { isAuth, user: userObj } = useSelector((state) => state.authentication);
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
-  const navigate=useNavigate()
+  const navigate = useNavigate()
+  console.log(userObj, isAuth);
+  useEffect(()=>{},[isAuth])
   return (
     <Container sx={{
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'space-between',
+      justifyContent: 'space-around',
       padding: '10px 0',
       position: 'sticky',
-      top: 0, 
-      zIndex: 1100, 
-      backgroundColor: '#fff', 
-      boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', 
-      borderRadius:'10px'
+      top: 0,
+      zIndex: 1100,
+      backgroundColor: '#fff',
+      boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+      borderRadius: '10px'
     }}>
       <Typography
         sx={{
@@ -79,13 +80,13 @@ const Navbar = () => {
           lineHeight: '1.2',
         }}
       >
-        <div onClick={()=>navigate('/')}>
-        <HeaderSpan>Q</HeaderSpan>uick<HeaderSpan>B</HeaderSpan>ite
+        <div onClick={() => navigate('/')}>
+          <HeaderSpan>Q</HeaderSpan>uick<HeaderSpan>B</HeaderSpan>ite
         </div>
       </Typography>
 
       <MenuContainer component="ul">
-        <li onClick={()=>navigate('/')}>Home</li>
+        <li onClick={() => navigate('/')}>Home</li>
         {['Menu', 'Testimonials', 'About Us'].map((tab) => (
           <li
             key={tab}
@@ -98,11 +99,11 @@ const Navbar = () => {
             }}
             style={{ pointerEvents: !isHome && tab !== 'Home' ? 'none' : 'auto', color: !isHome && tab !== 'Home' ? 'gray' : 'inherit' }}
           >
-            <ScrollLink 
+            <ScrollLink
               to={tab}
-              spy={true} 
-              smooth={true} 
-              duration={500} 
+              spy={true}
+              smooth={true}
+              duration={500}
               offset={-70}
             >
               {tab}
@@ -112,45 +113,58 @@ const Navbar = () => {
       </MenuContainer>
 
       <IconContainer>
-        <IconButton sx={{display:{xs:'none',md:'flex'}}} color="inherit">
+        <IconButton sx={{ display: { xs: 'none', md: 'flex' } }} color="inherit">
           <SearchIcon />
         </IconButton>
-        <IconButton onClick={()=>navigate('/cart')} sx={{display:{xs:'none',md:'flex'}}} color="inherit">
-          <ShoppingCartIcon/>
+        <IconButton onClick={() => navigate('/cart')} sx={{ display: { xs: 'none', md: 'flex' } }} color="inherit">
+          <ShoppingCartIcon />
         </IconButton>
-        <Button
-      sx={{
-        bgcolor: 'orange',
-        fontSize: '0.75rem',
-        padding: '6px 12px',
-        fontFamily: 'Montserrat, sans-serif',
-        display: 'flex',
-        justifyContent: 'space-between',
-        gap: '4px', 
-      }}
-      size="small"
-      variant="contained"
-    >
-      <Link
-        to="/login"
-        style={{
-          textDecoration: 'none',
-          color: 'inherit',
-        }}
-      >
-        Login
-      </Link>
-      /
-      <Link
-        to="/signup"
-        style={{
-          textDecoration: 'none',
-          color: 'inherit',
-        }}
-      >
-        Signup
-      </Link>
-    </Button>
+        {isAuth ?
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Avatar 
+              sx={{
+                height: '30px',
+                width: '30px',
+              }} 
+            />
+            <Typography sx={{display: { xs: 'none', md: 'block' },fontFamily:'Montserrat, sans-serif'}}>{userObj.user.name }</Typography> 
+          </Box>
+          :
+          <Button
+            sx={{
+              bgcolor: 'orange',
+              fontSize: '0.75rem',
+              padding: '6px 12px',
+              fontFamily: 'Montserrat, sans-serif',
+              display: 'flex',
+              justifyContent: 'space-between',
+              gap: '4px',
+            }}
+            size="small"
+            variant="contained"
+          >
+            <Link
+              to="/login"
+              style={{
+                textDecoration: 'none',
+                color: 'inherit',
+              }}
+            >
+              Login
+            </Link>
+            /
+            <Link
+              to="/signup"
+              style={{
+                textDecoration: 'none',
+                color: 'inherit',
+              }}
+            >
+              Signup
+            </Link>
+          </Button>
+        }
+
       </IconContainer>
     </Container>
   );

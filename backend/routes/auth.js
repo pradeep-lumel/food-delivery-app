@@ -1,7 +1,9 @@
 const express = require('express');
-const { registerUser,getUser, getAllUsers, loginUser, updateUser, deleteUser, deleteAllUser } = require('../controllers/authcontroller');
+const { registerUser,getUser, getAllUsers, loginUser, updateUser, deleteUser, deleteAllUser,getUserProfile} = require('../controllers/authcontroller');
+const authMiddleware = require('../middlewares/authMiddleware');
 const router = express.Router();
 
+router.route('/user/profile').get(authMiddleware,getUserProfile)
 router.route('/register').post(registerUser);
 router.route('/all-users').get(getAllUsers)
 router.route('/:id').get(getUser);
