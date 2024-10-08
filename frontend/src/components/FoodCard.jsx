@@ -20,6 +20,8 @@ const GoldTypography = styled(Typography)(({ theme }) => ({
 
 const FoodCard = ({ name, image, price, description }) => {
   const quantity=useSelector(state=>state.foodDisplay.foodOrderedCount[name]??0);
+  console.log('test',quantity);
+  
   const dispatch=useDispatch();
 
   const handleIncrease = () => {
