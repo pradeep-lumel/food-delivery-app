@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Table, TableBody, TableCell, TableContainer, 
   TableHead, TableRow, Paper, IconButton, 
@@ -15,6 +15,8 @@ import { styled } from '@mui/material/styles';
 import SendIcon from '@mui/icons-material/Send';
 import { HeadingTypo } from '../utils/Typo';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../utils/axiosInstance';
+import { toast } from 'react-toastify';
 
 const PromoCodeLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -23,15 +25,44 @@ const PromoCodeLabel = styled(Typography)(({ theme }) => ({
 }));
 
 const Cart = () => {
-  const cartItems = [
-    { id: 1, title: 'Item 1', price: 10, quantity: 1 },
-    { id: 2, title: 'Item 2', price: 20, quantity: 2 },
-  ];
-  const navigate=useNavigate()
-  const handleRemove = (id) => {
-    console.log('Remove item with id:', id);
-  };
+  const [cartItems,setCartItems]=useState([]);
+  const [cartItemsTotal,setCartItemTotal]=useState(0);
+  useEffect(()=>{
+   const fetchData=async()=>{
+    try {
+      const res=await axiosInstance.get('http://localhost:5000/api/v1/all-cart')
+      const cartDetails=res.data;
+      const fetchedCartItems=cartDetails.cartItems;
+      setCartItems(fetchedCartItems);
+    } catch (error) {  
+      console.error('Failed to fetch cart items:', error);
+    } 
+   }
+   fetchData();
+  },[cartItems])
+  
+  useEffect(()=>{
+    const calculateTotal= ()=>{
+      const totalSum=cartItems.reduce((sum,item)=>sum+ item.price * item.quantity ,0);
+      setCartItemTotal(totalSum);
+    }
+    calculateTotal()
+  },[cartItems])
 
+  const navigate=useNavigate()
+  
+
+  const handleRemove = async (item) => {
+    try {
+      console.log(item._id);
+      await axiosInstance.delete(`http://localhost:5000/api/v1/cart/${item._id}`);
+      toast.success(`Item "${item.title}" deleted successfully`);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      toast.error(`Failed to delete item "${item.title}"`);
+    }
+  };
+  
   return (
     <Container>
       <TableContainer sx={{ marginTop: '2%', overflowX: 'auto' }} component={Paper}>
@@ -55,7 +86,7 @@ const Cart = () => {
                 <TableCell sx={{ padding: '8px' }}>{item.quantity}</TableCell>
                 <TableCell sx={{ padding: '8px' }}>${item.price * item.quantity}</TableCell>
                 <TableCell sx={{ padding: '8px' }}>
-                  <IconButton onClick={() => handleRemove(item.id)}>
+                  <IconButton onClick={() => handleRemove(item)}>
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
@@ -77,7 +108,7 @@ const Cart = () => {
             <TableBody>
                 <TableRow>
                   <TableCell sx={{ padding: '8px' }}>Sub total</TableCell>
-                  <TableCell sx={{ padding: '8px', textAlign: 'right' }}>$54</TableCell>
+                  <TableCell sx={{ padding: '8px', textAlign: 'right' }}>{cartItemsTotal}</TableCell>
                 </TableRow>
                 <TableRow>
                 <TableCell sx={{ padding: '8px'}}>Delivery Fee</TableCell>
@@ -85,7 +116,7 @@ const Cart = () => {
                 </TableRow>
                 <TableRow>
                 <TableCell sx={{ padding: '8px',fontWeight:'800'}}>Total</TableCell>
-                <TableCell sx={{ padding: '8px', textAlign: 'right' }}>$108</TableCell>
+                <TableCell sx={{ padding: '8px', textAlign: 'right' }}>${cartItemsTotal+5}</TableCell>
                 </TableRow>
             </TableBody>
           </Table>
@@ -98,7 +129,7 @@ const Cart = () => {
           fullWidth
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position="start" >
                 <PromoCodeLabel>PROMO CODE</PromoCodeLabel>
               </InputAdornment>
             ),
@@ -110,6 +141,7 @@ const Cart = () => {
               </InputAdornment>
             ),
           }}
+          placeholder='Enter here...'
         />
       </Stack>
       <Button onClick={()=>navigate('/order')} sx={{bgcolor:'darkOrange',color:'white',fontSize:'10px',color:'black',fontFamily:'Montserrat',fontWeight:'500'}}>PROCEED TO CHECKOUT</Button>
