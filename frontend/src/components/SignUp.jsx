@@ -27,7 +27,7 @@ const SignUpModal = () => {
 
   const handleClose = () => {
     setOpen(false);
-    navigate('/');
+    navigate('/login');
   };
 
   const handleChange = (e) => {
@@ -61,7 +61,6 @@ const SignUpModal = () => {
       setTimeout(() => {
         handleClose();
       }, 1000); 
-  
     } catch (error) {
       console.error('Error during registration:', error);
       toast.error(error.message);

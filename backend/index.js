@@ -4,6 +4,7 @@ const dotenv = require('dotenv').config();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const auth = require('./routes/auth');
+const cart=require('./routes/cartRoute')
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/v1', auth);
+app.use('/api/v1',cart);
 app.use('/', (req, res) => {
     res.send('<h1>Hello World</h1>');
 });
