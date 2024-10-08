@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Box, Container, Typography, IconButton, styled, Button, Avatar } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link as ScrollLink } from 'react-scroll';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../slicers/authSlice';
+import { toast } from 'react-toastify';
+ 
 const MenuContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   listStyle: 'none',
@@ -25,13 +27,13 @@ const MenuContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
   },
 }));
-
+ 
 const HeaderSpan = styled('span')(({ theme }) => ({
   color: 'orange',
   fontWeight: 'bold',
   fontSize: '1.5em',
 }));
-
+ 
 const IconContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -40,18 +42,31 @@ const IconContainer = styled(Box)(({ theme }) => ({
     gap: '15px',
   },
 }));
-
+ 
 const Navbar = () => {
   const [activeTab, setActiveTab] = useState('Home');
   const location = useLocation();
   const isHome = location.pathname === '/';
   const { isAuth, user: userObj } = useSelector((state) => state.authentication);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+ 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
-  const navigate = useNavigate()
-  console.log(userObj, isAuth);
-  useEffect(()=>{},[isAuth])
+ 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    dispatch(logout());
+    toast.info('please login to have a Quick Bite');
+    setTimeout(() => {
+      handleClose();
+    }, 1000); 
+    navigate('/');
+  };
+ 
+  useEffect(() => {}, [isAuth]);
+ 
   return (
     <Container sx={{
       display: 'flex',
@@ -84,7 +99,7 @@ const Navbar = () => {
           <HeaderSpan>Q</HeaderSpan>uick<HeaderSpan>B</HeaderSpan>ite
         </div>
       </Typography>
-
+ 
       <MenuContainer component="ul">
         <li onClick={() => navigate('/')}>Home</li>
         {['Menu', 'Testimonials', 'About Us'].map((tab) => (
@@ -111,7 +126,7 @@ const Navbar = () => {
           </li>
         ))}
       </MenuContainer>
-
+ 
       <IconContainer>
         <IconButton sx={{ display: { xs: 'none', md: 'flex' } }} color="inherit">
           <SearchIcon />
@@ -119,17 +134,22 @@ const Navbar = () => {
         <IconButton onClick={() => navigate('/cart')} sx={{ display: { xs: 'none', md: 'flex' } }} color="inherit">
           <ShoppingCartIcon />
         </IconButton>
-        {isAuth ?
+        {isAuth ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Avatar 
-              sx={{
-                height: '30px',
-                width: '30px',
-              }} 
+            <Avatar sx={{ height: '30px', width: '30px' }} />
+            <Typography sx={{ display: { xs: 'none', md: 'block' }, fontFamily: 'Montserrat, sans-serif' }}>
+              {userObj?.user?.name}
+            </Typography>
+            <Box
+              component="img"
+              src="../../public/Food_images/assets/logout_icon.png"
+              alt="logout"
+              height="25"
+              onClick={handleLogout}
+              sx={{ cursor: 'pointer' }}
             />
-            <Typography sx={{display: { xs: 'none', md: 'block' },fontFamily:'Montserrat, sans-serif'}}>{userObj.user.name }</Typography> 
           </Box>
-          :
+        ) : (
           <Button
             sx={{
               bgcolor: 'orange',
@@ -163,11 +183,10 @@ const Navbar = () => {
               Signup
             </Link>
           </Button>
-        }
-
+        )}
       </IconContainer>
     </Container>
   );
 };
-
+ 
 export default Navbar;
