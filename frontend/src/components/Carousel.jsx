@@ -58,7 +58,7 @@ const Carousel = () => {
           <Card className={classes.card}>
             <CardMedia
               className={classes.media}
-              image='../../public/Food_images/assets/food_1.png'
+              image='../../public/Food_images/assets/avatar1.jpg'
               title="Slide 1"
             />
             <CardContent>
@@ -75,7 +75,7 @@ const Carousel = () => {
           <Card className={classes.card}>
             <CardMedia
               className={classes.media}
-              image='../../public/Food_images/assets/food_1.png'
+              image='../../public/Food_images/assets/avatar1.jpg'
               title="Slide 2"
             />
             <CardContent>

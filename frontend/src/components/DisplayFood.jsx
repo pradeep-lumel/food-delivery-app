@@ -18,7 +18,8 @@ const FoodDisplayBox = styled(Box)(({ theme }) => ({
 }));
 
 export const DisplayFood = () => {
- const activeFood=useSelector(state=>state.foodDisplay.activeFoodCategory)
+ const {activeFoodCategory:activeFood,foodOrderedCount}=useSelector(state=>state.foodDisplay)
+ console.log(foodOrderedCount);
  const [specificCategoryList, setSpecificCategoryList] = useState([])
  useEffect(()=>{
     const filteredList=food_list.filter((item)=>{

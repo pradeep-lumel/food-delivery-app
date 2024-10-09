@@ -17,6 +17,7 @@ import { HeadingTypo } from '../utils/Typo';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosInstance';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 const PromoCodeLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
@@ -25,22 +26,21 @@ const PromoCodeLabel = styled(Typography)(({ theme }) => ({
 }));
 
 const Cart = () => {
-  const [cartItems,setCartItems]=useState([]);
+  const foodOrderedCountMap=useSelector(state=>state.foodDisplay.foodOrderedCount);
+  const cartItems=[];
+  for (const key in foodOrderedCountMap) {
+    if (foodOrderedCountMap.hasOwnProperty(key)) {
+      const obj = {
+        title: key,
+        quantity: foodOrderedCountMap[key],
+        id: 2,
+        price: 10,
+      };
+      cartItems.push(obj); 
+    }
+  }
   const [cartItemsTotal,setCartItemTotal]=useState(0);
-  useEffect(()=>{
-   const fetchData=async()=>{
-    try {
-      const res=await axiosInstance.get('http://localhost:5000/api/v1/all-cart')
-      const cartDetails=res.data;
-      const fetchedCartItems=cartDetails.cartItems;
-      setCartItems(fetchedCartItems);
-    } catch (error) {  
-      console.error('Failed to fetch cart items:', error);
-    } 
-   }
-   fetchData();
-  },[cartItems])
-  
+    
   useEffect(()=>{
     const calculateTotal= ()=>{
       const totalSum=cartItems.reduce((sum,item)=>sum+ item.price * item.quantity ,0);
@@ -54,7 +54,6 @@ const Cart = () => {
 
   const handleRemove = async (item) => {
     try {
-      console.log(item._id);
       await axiosInstance.delete(`http://localhost:5000/api/v1/cart/${item._id}`);
       toast.success(`Item "${item.title}" deleted successfully`);
     } catch (error) {
