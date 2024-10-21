@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+//schema for user to login and register.
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
