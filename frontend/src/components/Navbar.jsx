@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Container, Typography, IconButton, styled, Button, Avatar } from '@mui/material';
+import { Box, Container, Typography, IconButton, styled, Button, Avatar, Badge } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Link as ScrollLink } from 'react-scroll';
@@ -48,6 +48,8 @@ const Navbar = () => {
   const location = useLocation();
   const isHome = location.pathname === '/';
   const { isAuth, user: userObj } = useSelector((state) => state.authentication);
+  const foodCountMap= useSelector((state) => state.foodDisplay.foodOrderedCount);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
  
@@ -67,6 +69,14 @@ const Navbar = () => {
  
   useEffect(() => {}, [isAuth]);
  
+  const calcBadge=()=>{
+    let cartedFoodCount=0;
+    Object.keys(foodCountMap).forEach((key)=>{
+      if(foodCountMap[key]!=0)cartedFoodCount++;
+    })
+    return cartedFoodCount
+  }
+
   return (
     <Container sx={{
       display: 'flex',
@@ -132,7 +142,9 @@ const Navbar = () => {
           <SearchIcon />
         </IconButton>
         <IconButton onClick={() => navigate('/cart')} sx={{ display: { xs: 'none', md: 'flex' } }} color="inherit">
-          <ShoppingCartIcon />
+        <Badge badgeContent={calcBadge()} color="warning"> 
+      <ShoppingCartIcon />
+    </Badge>
         </IconButton>
         {isAuth ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

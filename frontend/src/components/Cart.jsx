@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Table, TableBody, TableCell, TableContainer, 
-  TableHead, TableRow, Paper, IconButton, 
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import {
+  Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Paper, IconButton,
   Stack,
   Container,
   Box,
@@ -15,10 +17,8 @@ import { styled } from '@mui/material/styles';
 import SendIcon from '@mui/icons-material/Send';
 import { HeadingTypo } from '../utils/Typo';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../utils/axiosInstance';
-import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setFoodOrderedCount } from '../slicers/FoodDisplaySlice';
 const PromoCodeLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.text.secondary,
   marginRight: theme.spacing(1),
@@ -26,45 +26,60 @@ const PromoCodeLabel = styled(Typography)(({ theme }) => ({
 }));
 
 const Cart = () => {
-  const foodOrderedCountMap=useSelector(state=>state.foodDisplay.foodOrderedCount);
-  const cartItems=[];
-  for (const key in foodOrderedCountMap) {
-    if (foodOrderedCountMap.hasOwnProperty(key)) {
-      const obj = {
+  const foodOrderedCountMap = useSelector(state => state.foodDisplay.foodOrderedCount);
+  const [cartItems, setCartItems] = useState([]);
+  const [cartItemsTotal, setCartItemTotal] = useState(0);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const items = Object.keys(foodOrderedCountMap)
+      .filter((key) => foodOrderedCountMap[key] > 0)
+      .map((key, idx) => ({
         title: key,
         quantity: foodOrderedCountMap[key],
-        id: 2,
+        id: idx + 1,
         price: 10,
-      };
-      cartItems.push(obj); 
-    }
-  }
-  const [cartItemsTotal,setCartItemTotal]=useState(0);
-    
-  useEffect(()=>{
-    const calculateTotal= ()=>{
-      const totalSum=cartItems.reduce((sum,item)=>sum+ item.price * item.quantity ,0);
+      }));
+
+    setCartItems(items);
+  }, [foodOrderedCountMap]);
+
+  useEffect(() => {
+    const calculateTotal = () => {
+      const totalSum = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
       setCartItemTotal(totalSum);
     }
-    calculateTotal()
-  },[cartItems])
+    calculateTotal();
+  }, [cartItems]);
 
-  const navigate=useNavigate()
-  
+  const navigate = useNavigate();
 
-  const handleRemove = async (item) => {
-    try {
-      await axiosInstance.delete(`http://localhost:5000/api/v1/cart/${item._id}`);
-      toast.success(`Item "${item.title}" deleted successfully`);
-    } catch (error) {
-      console.error("Error deleting item:", error);
-      toast.error(`Failed to delete item "${item.title}"`);
-    }
+  // Handle removing an item
+  const handleRemove = (item) => {
+    // const updatedCartItems = cartItems.filter(it => it.title !== item.title);
+    // setCartItems(updatedCartItems);
+    dispatch(setFoodOrderedCount({ foodName: item.title, count: -(item.quantity) }))
   };
-  
+
   return (
-    <Container>
-      <TableContainer sx={{ marginTop: '2%', overflowX: 'auto' }} component={Paper}>
+    cartItems.length<=0?
+    <Alert 
+    severity="error" 
+    sx={{ 
+      marginTop: '5%', 
+      padding: '20px', 
+      width: '50%', 
+      marginX: 'auto', 
+      boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', 
+      borderRadius: '8px', 
+      fontSize: '1.2rem', 
+      textAlign: 'center', 
+    }}
+  >
+    <AlertTitle sx={{ fontWeight: 'bold', fontSize: '1.5rem' }}>Cart is Empty</AlertTitle>
+    Please select some items to cart — <strong>check it out!</strong>
+  </Alert>
+     :<Container>
+      {cartItems.length>=1 && <TableContainer sx={{ marginTop: '2%', overflowX: 'auto' }} component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
@@ -78,12 +93,12 @@ const Cart = () => {
           </TableHead>
           <TableBody>
             {cartItems.map((item) => (
-              <TableRow key={item.id}>
+              item.quantity >= 1 && <TableRow key={item.id}>
                 <TableCell sx={{ padding: '8px' }}>{item.id}</TableCell>
                 <TableCell sx={{ padding: '8px' }}>{item.title}</TableCell>
                 <TableCell sx={{ padding: '8px' }}>${item.price}</TableCell>
                 <TableCell sx={{ padding: '8px' }}>{item.quantity}</TableCell>
-                <TableCell sx={{ padding: '8px' }}>${item.price * item.quantity}</TableCell>
+                <TableCell sx={{ padding: '8px' }}>${(item.price * item.quantity).toFixed(2)}</TableCell>
                 <TableCell sx={{ padding: '8px' }}>
                   <IconButton onClick={() => handleRemove(item)}>
                     <DeleteIcon />
@@ -94,29 +109,30 @@ const Cart = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      
-      <HeadingTypo sx={{marginTop:'3%'}}>Cart Totals</HeadingTypo>
-      <Stack 
-        spacing={2} 
-        direction={{ xs: 'column', md: 'row' }} 
-        justifyContent="space-between" 
+      }
+
+      <HeadingTypo sx={{ marginTop: '3%' }}>Cart Totals</HeadingTypo>
+      <Stack
+        spacing={2}
+        direction={{ xs: 'column', md: 'row' }}
+        justifyContent="space-between"
         sx={{ marginTop: '2%', marginBottom: '3%', alignItems: { xs: 'flex-start', md: 'center' } }}
       >
         <TableContainer sx={{ width: { xs: '100%', md: '45%' }, marginBottom: { xs: '2%', md: 0 } }} component={Paper}>
           <Table>
             <TableBody>
-                <TableRow>
-                  <TableCell sx={{ padding: '8px' }}>Sub total</TableCell>
-                  <TableCell sx={{ padding: '8px', textAlign: 'right' }}>{cartItemsTotal}</TableCell>
-                </TableRow>
-                <TableRow>
-                <TableCell sx={{ padding: '8px'}}>Delivery Fee</TableCell>
+              <TableRow>
+                <TableCell sx={{ padding: '8px' }}>Sub total</TableCell>
+                <TableCell sx={{ padding: '8px', textAlign: 'right' }}>${cartItemsTotal.toFixed(2)}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ padding: '8px' }}>Delivery Fee</TableCell>
                 <TableCell sx={{ padding: '8px', textAlign: 'right' }}>$5</TableCell>
-                </TableRow>
-                <TableRow>
-                <TableCell sx={{ padding: '8px',fontWeight:'800'}}>Total</TableCell>
-                <TableCell sx={{ padding: '8px', textAlign: 'right' }}>${cartItemsTotal+5}</TableCell>
-                </TableRow>
+              </TableRow>
+              <TableRow>
+                <TableCell sx={{ padding: '8px', fontWeight: '800' }}>Total</TableCell>
+                <TableCell sx={{ padding: '8px', textAlign: 'right' }}>${(cartItemsTotal + 5).toFixed(2)}</TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
@@ -127,13 +143,13 @@ const Cart = () => {
           fullWidth
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start" >
+              <InputAdornment position="start">
                 <PromoCodeLabel>PROMO CODE</PromoCodeLabel>
               </InputAdornment>
             ),
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => {}} color="primary">
+                <IconButton onClick={() => { }} color="primary">
                   <SendIcon />
                 </IconButton>
               </InputAdornment>
@@ -142,7 +158,12 @@ const Cart = () => {
           placeholder='Enter here...'
         />
       </Stack>
-      <Button onClick={()=>navigate('/order')} sx={{bgcolor:'darkOrange',color:'white',fontSize:'10px',color:'black',fontFamily:'Montserrat',fontWeight:'500'}}>PROCEED TO CHECKOUT</Button>
+      <Button
+        onClick={() => navigate('/order')}
+        sx={{ bgcolor: 'darkOrange', color: 'white', fontSize: '10px', fontFamily: 'Montserrat', fontWeight: '500' }}
+      >
+        PROCEED TO CHECKOUT
+      </Button>
     </Container>
   );
 };
